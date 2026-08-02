@@ -28,6 +28,11 @@ any program that opens `/dev/videoN` can send:
 The vendor-class path is the complete one. It uploads the firmware and reboots the
 camera with no physical contact.
 
+That path is also more than a firmware channel. It reads and writes **any file** on
+the internal volume of the camera, by absolute path, with no authentication (§5.2,
+§5.3). A firmware install is one use of the write half. The read half can copy off
+the operating logs of the camera.
+
 This is analysis of a device I own. See [Scope](#13-scope).
 
 ---
@@ -196,7 +201,7 @@ rewrites the 2 KB Ambarella partition table, with a CRC32 at `+0x4CC` over a tab
 `0xA86AF8`, and reboots.
 
 `amboot` programs the partitions on the next boot. `amboot` is not part of this
-package, so this file cannot describe what `amboot` verifies. Section 5.4 answers that
+package, so this file cannot describe what `amboot` verifies. Section 5.5 answers that
 question with a hardware test instead.
 
 ### 3.4 Gimbal MCU OTA
@@ -214,7 +219,7 @@ downgrade. The bootloader of the MCU is not part of this package.
 `"Currently in special mode :%s, do not check for upgrade firmware"`.
 
 The camera therefore installs firmware only from `uvc` or `photo` mode. A host must
-write the file in one mode and install it from another. Section 5.3 shows how one
+write the file in one mode and install it from another. Section 5.4 shows how one
 request satisfies both conditions.
 
 ---
@@ -248,19 +253,39 @@ limit and is the default for that reason.
 
 ---
 
-## 5. Install over the vendor class
+## 5. Read, write and install over the vendor class
 
-Mode 3 (`simple`) is an Insta360 vendor class, built from `libusb_simple.a`. It holds
-a file-transfer interface. Over this interface the whole update runs with no action
-from the user.
+Mode 3 (`simple`) is an Insta360 vendor class, built from `libusb_simple.a`. It gives
+a host **unauthenticated read and write access to the internal volume of the camera**,
+by absolute path. A firmware install is one use of the write half. Over this interface
+the whole update runs with no action from the user.
 
 ### 5.1 Interface
 
-In `simple` mode the camera enumerates as **4255:1234**. It has one vendor interface,
-class `0xFF`/`0xFF`, with four bulk endpoints. Endpoints `0x01` and `0x82` are the
-file-transfer pair, driven by the tasks `insta_port_01_task` and `insta_port_82_task`.
-Endpoints `0x04` and `0x83` are unexplored. The class allocates a 6 MB
-`jsonRespondBuffer`, so a JSON command surface exists somewhere in it.
+In `simple` mode the camera enumerates as **4255:1234**, which the USB ID database
+resolves to GoPro because Ambarella parts share that vendor ID. It has one vendor
+interface, class `0xFF`/`0xFF`, with four bulk endpoints. Endpoints `0x01` and `0x82`
+are the file-transfer pair, driven by the tasks `insta_port_01_task` and
+`insta_port_82_task`.
+
+Endpoints `0x83` and `0x04` are declared but never serviced. The bulk helpers take an
+endpoint address as a parameter, and the code of Insta360 passes only `0x01` and
+`0x82`. The port_82 task hands its worker a pointer to the constant `0x82`. The only
+other users of those helpers are two Ambarella SDK threads, `simple_thread_func2` and
+`simple_thread_func3`. `AppMscSimpled_TestStart` and `TestStart3` start them. Both are
+reachable only from the AmbaShell test-command handler `FUN_00973A24`, which needs the
+debug console and not USB. A read of endpoint `0x83` on a live camera times out. The
+two endpoints are default descriptor slots of the SDK.
+
+The 6 MB `jsonRespondBuffer` is not a command surface. Its only consumer is the CS 5
+worker `FUN_001E02E0`, which passes it to the bulk transmit helper for endpoint
+`0x82`. It is the transmit buffer for file downloads, and the name comes from the
+shared Insta360 codebase. The JSON code in the image (`cJSON_Parse`,
+`A:\factory_script.json`) belongs to the factory command set, which no USB transport
+reaches (§10).
+
+The descriptor templates ship as `4255:0006`. `insta_usb_simple_class_init` patches
+the product ID to `0x1234` in both the full-speed and high-speed copies at runtime.
 
 The control requests have the shape of UVC requests but are not UVC:
 
@@ -289,12 +314,28 @@ insta_simple_cs_handle(): Don't support Control Selector 0x100
 A `CS<<8` request is rejected and does not write the shared response buffer. The next
 read therefore returns the length of the previous selector.
 
-### 5.2 Upload
+### 5.2 Write any file
 
 CS 4 is 137 bytes: `{u32 total, u32 written, u8 state, char name[128]}`. Write it with
 `state = 1` to arm an upload. Then send the file to bulk endpoint `0x01`. Then read CS
 4 until `state` becomes 2. A `state` of `0x70` means a size error and `0x71` means a
 write error.
+
+**The `name` field is an absolute path, and the camera does not validate it.**
+`SimpleClass_WriteFile` passes it to `fopen` unchanged. The firmware path
+`A:\Insta360WebCamFW.bin` has no special status: it is only the path that the updater
+reads at boot. Confirmed on hardware with `A:\probe.txt`, which the camera accepted
+and reported as complete.
+
+Two files on `A:` change the behavior of the camera, and this interface can create
+both:
+
+- `A:\is_factory_mode`, whose existence enables the factory command set
+- `A:\factory_script.json`, which the firmware parses with cJSON
+
+I did not test either.
+The factory commands dispatch through the App handler, which no USB transport reaches
+(§10.1), so the effect of creating those files is unresolved.
 
 CAUTION: `SimpleClass_WriteFile` opens the target file with mode `"a+"`, which
 appends. An upload over an existing file joins the two files. The updater deletes the
@@ -303,7 +344,24 @@ a file that corrupts the next upload. The MD5 test then rejects the result, so t
 camera does not install it. [`fwinstall.py`](fwinstall.py) reads the slot state before
 it arms an upload.
 
-### 5.3 CS 2 reboots the camera
+### 5.3 Read any file
+
+CS 5 is the reverse direction, and it is the more serious half. The structure is 225
+bytes: 8 reserved bytes, a `u8` state, then a path of up to 200 characters. Write it
+with `state = 1` to arm a read. The camera then sends the file on bulk endpoint
+`0x82`. Read CS 5 to follow progress. A `state` of `0x72` means the path was empty or
+too long. A `state` of `0x71` means the camera cannot open the file. A `state` of
+`0x70` is a state error.
+
+The only check is the length of the path. **A host can therefore read any file on the
+internal volume of the camera.** It needs no mass storage, no mount and no action from
+the user. That includes `A:\LOG`, which holds the boot logs and the operational
+history of the camera, and `A:\factory.log`.
+
+Confirmed on hardware: a file written with CS 4 was read back with CS 5, and the
+content matched.
+
+### 5.4 CS 2 reboots the camera
 
 CS 2 does more than change the USB mode. It restarts the camera:
 
@@ -333,7 +391,7 @@ The whole cycle takes about 30 seconds. Nobody touches the camera.
 
 WARNING: CS 2 after an upload commits to the install. There is no confirmation step.
 
-### 5.4 Hardware results
+### 5.5 Hardware results
 
 I ran this sequence in both directions on a live camera:
 
@@ -826,12 +884,14 @@ appear to be new are:
 
 - the `simple` vendor class of the Link: `4255:1234`, control selectors 1, 2, 4, 5
   and 6, the `wValue = CS` form, and control selector 2 as a reboot primitive (§5)
-- the unattended install that follows from it, on any Insta360 camera (§5.3)
+- unauthenticated read and write of any file on the internal volume, by absolute
+  path, over that class (§5.2, §5.3)
+- the unattended install that follows from it, on any Insta360 camera (§5.4)
 - the LED path of the Link: the table at `0x01192070` and UART command `0x50` to the
   gimbal MCU (§6)
 - the full extension-unit map and the internal parameter space (§7.3, §7.4)
 - the mode guard and the inert version compare (§3.2, §3.5)
-- the hardware result that `amboot` does not verify partition 0 on this camera (§5.4)
+- the hardware result that `amboot` does not verify partition 0 on this camera (§5.5)
 
 ## 13. Scope
 

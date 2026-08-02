@@ -46,7 +46,7 @@ OUTER_CRC_OFF = 0x24
 OUTER_TABLE_OFF = 0x30
 
 # LED mode table: 16 entries x 16 bytes, three {level, brightness, period_u16}
-# channels plus a u16 duration.  See README section 5.
+# channels plus a u16 duration.  See README section 6.
 LED_TABLE_VA = 0x01192070
 LED_TABLE_ENTRIES = 16
 LED_ENTRY_SIZE = 16
