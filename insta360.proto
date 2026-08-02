@@ -1,0 +1,1849 @@
+syntax = "proto2";
+package insta360;
+
+enum insta360.messages.AACBSType {
+  RAW = 0;
+  ADTS = 1;
+}
+
+enum insta360.messages.BTCarCmdID {
+  BTCAR_SWITCH_NORMAL_PHOTO = 0;
+  BTCAR_SWITCH_NORMAL_PHOTO_QUICK = 1;
+  BTCAR_SWITCH_HDR_PHOTO_QUICK = 2;
+  BTCAR_SWITCH_TIMELAPSE_PHOTO_QUICK = 3;
+  BTCAR_SWITCH_BURST_PHOTO_QUICK = 4;
+  BTCAR_SWITCH_SUPERNIGHT_PHOTO_QUICK = 5;
+  BTCAR_SWITCH_NORMAL_VIDEO = 6;
+  BTCAR_SWITCH_NORMAL_VIDEO_QUICK = 7;
+  BTCAR_SWITCH_HDR_VIDEO_QUICK = 8;
+  BTCAR_SWITCH_TIMELAPSE_VIDEO_QUICK = 9;
+  BTCAR_SWITCH_TIMESHIFT_VIDEO_QUICK = 10;
+  BTCAR_SWITCH_BULLETTIME_VIDEO_QUICK = 11;
+  BTCAR_SWITCH_LOOPRECORDING_VIDEO_QUICK = 12;
+  BTCAR_EXECUTE_FUNC = 13;
+  BTCAR_BUTTON1_FUNC = 14;
+  BTCAR_BUTTON2_FUNC = 15;
+  BTCAR_MULTICAM = 16;
+  BTCAR_INVALID_ID = 255;
+}
+
+enum insta360.messages.BatteryStatus.PowerType {
+  BATTERY = 0;
+  ADAPTER = 1;
+}
+
+enum insta360.messages.ButtonPressMode {
+  DO_NOT_CHANGE = 0;
+  DO_NOTHING = 1;
+  SHUT_DOWN = 2;
+  TAKE_PICTURE = 3;
+  CAPTURE = 4;
+  SELFTIMER = 5;
+  TIMELAPSE = 6;
+  HIGH_FRAME_RATE = 7;
+  ACTION_TIMELAPSE_VIDEO = 8;
+  INTERVAL_SHOOTING = 9;
+  ACTION_INTERVAL_VIDEO = 10;
+  TAKE_HDR_IMAGE = 11;
+  ACTION_STATIC_TIMELAPSE = 12;
+  ACTION_CALIBRATE_GYRO = 13;
+  ACTION_HDR_CAPTURE = 14;
+  ACTION_TIMESHIFT = 15;
+  TAKE_BURST_IMAGE = 16;
+  TAKE_AEB_NIGHT_IMAGE = 17;
+  SUPER_CAPTURE = 18;
+  ACTION_LOOPRECORDING = 19;
+  TAKE_STARLAPSE_IMAGE = 20;
+  FPV_RECORDING = 21;
+  MOVIE_RECORDING = 22;
+  SLOW_MOTION_RECORDING = 23;
+}
+
+enum insta360.messages.ButtonStatus.ButtonState {
+  BUTTON_UNKNOWN = 0;
+  BUTTON_POWER_DONW = 1;
+  BUTTON_SHOOT_DONW = 2;
+  BUTTON_BOTH_DONW = 3;
+  BUTTON_NONE_DONW = 4;
+  BUTTON_POWER_PRESS_1S = 5;
+  BUTTON_POWER_PRESS_2S = 6;
+  BUTTON_POWER_DOUBLE_CLICK = 7;
+  BUTTON_SHOOT_PRESS_1S = 8;
+  BUTTON_SHOOT_DOUBLE_CLICK = 9;
+  BUTTON_MODESW_DONW = 10;
+  BUTTON_MODESW_PRESS_1S = 11;
+  BUTTON_MODESW_DOUBLE_CLICK = 12;
+  BUTTON_USRCSTM_DONW = 13;
+  BUTTON_USRCSTM_PRESS_1S = 14;
+  BUTTON_USRCSTM_DOUBLE_CLICK = 15;
+}
+
+enum insta360.messages.CameraCaptureState {
+  NOT_CAPTURE = 0;
+  NORMAL_CAPTURE = 1;
+  TIMELAPSE_CAPTURE = 2;
+  INTERVAL_SHOOTING_CAPTURE = 3;
+  SINGLE_SHOOTING = 4;
+  HDR_SHOOTING = 5;
+  SELF_TIMER_SHOOTING = 6;
+  BULLET_TIME_CAPTURE = 7;
+  SETTINGS_NEW_VALUE = 8;
+  HDR_CAPTURE = 9;
+  BURST_SHOOTING = 10;
+  STATIC_TIMELAPSE_SHOOTING = 11;
+  INTERVAL_VIDEO_CAPTURE = 12;
+  TIMESHIFT_CAPTURE = 13;
+  AEB_NIGHT_SHOOTING = 14;
+  SINGLE_POWER_PANO_SHOOTING = 15;
+  HDR_POWER_PANO_SHOOTING = 16;
+  SUPER_NORMAL_CAPTURE = 17;
+  LOOP_RECORDING_CAPTURE = 18;
+  STARLAPSE_SHOOTING = 19;
+  FPV_RECORDING_CAPTURE = 20;
+  MOVIE_RECORDING_CAPTURE = 21;
+  SLOW_MOTION_CAPTURE = 22;
+}
+
+enum insta360.messages.CaptureMode {
+  Capture_MODE_UNKNOWN = 0;
+  Capture_MODE_NORMAL = 1;
+  Capture_MODE_BULLETTIME = 2;
+  Capture_MODE_HDR = 3;
+  Capture_MODE_TIMESHIFT = 4;
+  Capture_MODE_SUPER_VIDEO = 5;
+  Capture_MODE_LOOPRECORDING = 6;
+  Capture_MODE_FPV = 7;
+  Capture_MODE_MOVIE = 8;
+  Capture_MODE_SLOWMOTION = 9;
+}
+
+enum insta360.messages.CardLocation {
+  STOR_CL_CAMERA = 0;
+  STOR_CL_READER = 1;
+}
+
+enum insta360.messages.CardState {
+  STOR_CS_PASS = 0;
+  STOR_CS_NOCARD = 1;
+  STOR_CS_NOSPACE = 2;
+  STOR_CS_INVALID_FORMAT = 3;
+  STOR_CS_WPCARD = 4;
+  STOR_CS_OTHER_ERROR = 5;
+}
+
+enum insta360.messages.ChargeboxConnectedStatus.ChargeboxConnectedType {
+  disconnected = 0;
+  connected = 1;
+}
+
+enum insta360.messages.CheckAuthorizationResp.AuthorizationStatus {
+  AUTHORIZED = 0;
+  UNAUTHORIZED = 1;
+  SYSTEMBUSY = 2;
+}
+
+enum insta360.messages.Error.ErrorCode {
+  UNKNOWN_ERROR = 0;
+  UNKNOWN_MSG_CODE = 1;
+  UNKNOWN_MSG_PAYLOAD = 2;
+  EXECUTE_ERROR = 3;
+  OVER_FILE_NUMBER_LIMIT = 4;
+  SYSTEM_BUSY = 5;
+}
+
+enum insta360.messages.ExposureOptions.Program {
+  AUTO = 0;
+  ISO_PRIORITY = 1;
+  SHUTTER_PRIORITY = 2;
+  MANUAL = 3;
+  ADAPTIVE = 4;
+}
+
+enum insta360.messages.ExtraMetadata.AudioModeType {
+  AUDIO_MODE_UNKNOWN = 0;
+  AUDIO_MODE_FOCUS = 1;
+  AUDIO_MODE_WNR_STEREO = 2;
+  AUDIO_MODE_360 = 3;
+  AUDIO_MODE_RS_STEREO = 4;
+  AUDIO_MODE_RESERVE1 = 5;
+  AUDIO_MODE_RESERVE2 = 6;
+}
+
+enum insta360.messages.ExtraMetadata.Battery_type {
+  THICK = 0;
+  THIN = 1;
+  VERTICAL = 2;
+}
+
+enum insta360.messages.ExtraMetadata.Camera_Posture {
+  CAMERA_ROTATE_0 = 0;
+  CAMERA_ROTATE_90 = 1;
+  CAMERA_ROTATE_180 = 2;
+  CAMERA_ROTATE_270 = 3;
+}
+
+enum insta360.messages.ExtraMetadata.EvoStatusMode {
+  UNKNOWN_STATUS_MODE = 0;
+  DEGREE180 = 1;
+  DEGREE360 = 2;
+}
+
+enum insta360.messages.ExtraMetadata.ExpectOutputType {
+  DEFAULT = 0;
+  INSTA_PANO = 1;
+  MULTI_CAMERA = 2;
+  ONE_TAKE = 3;
+}
+
+enum insta360.messages.ExtraMetadata.ExtraUserOptions.LogoType {
+  UNKNOWN_LOGO_TYPE = 0;
+  NO_LOGO = 1;
+  INSTA_LOGO = 2;
+}
+
+enum insta360.messages.ExtraMetadata.ExtraUserOptions.OffsetConvertState {
+  WaterProof = 0;
+  DivingWater = 1;
+  DivingAir = 2;
+  StitchOptimization = 3;
+  Protect = 4;
+  SphereProtect = 5;
+  FpvProtect = 6;
+}
+
+enum insta360.messages.ExtraMetadata.GpsSource {
+  GSV = 0;
+  DASHBOARD = 1;
+  REMOTE = 2;
+}
+
+enum insta360.messages.ExtraMetadata.GyroType {
+  INSDEV_IMU_TYPE_20948 = 0;
+  INSDEV_IMU_TYPE_40609 = 1;
+}
+
+enum insta360.messages.ExtraMetadata.Gyro_FilterType {
+  GYRO_FILTER_TYPE_UNKNOWN = 0;
+  GYRO_FILTER_TYPE_BRUTE = 1;
+  GYRO_FILTER_TYPE_AKF = 2;
+}
+
+enum insta360.messages.ExtraMetadata.HDR_STATE {
+  NOT_HDR = 0;
+  WAITING_PROCESS = 1;
+  PROCESSED = 2;
+}
+
+enum insta360.messages.ExtraMetadata.Image_FovType {
+  FOV_TYPE_UNKNOWN = 0;
+  FOV_TYPE_WIDE = 1;
+  FOV_TYPE_LINEAR = 2;
+  FOV_TYPE_ULTRAWIDE = 3;
+  FOV_TYPE_NARROW = 4;
+  FOV_TYPE_POV = 5;
+  FOV_TYPE_LINEARPLUS = 6;
+  FOV_TYPE_LINEARHORIZON = 7;
+  FOV_TYPE_FPV = 8;
+}
+
+enum insta360.messages.ExtraMetadata.RawCaptureType {
+  RAW_CAPTURE_TYPE_OFF = 0;
+  RAW_CAPTURE_TYPE_DNG = 1;
+  RAW_CAPTURE_TYPE_RAW = 2;
+  RAW_CAPTURE_TYPE_PURESHOT = 3;
+}
+
+enum insta360.messages.ExtraMetadata.SensorDevice {
+  SENSOR_DEVICE_UNKNOWN = 0;
+  SENSOR_DEVICE_FRONT = 1;
+  SENSOR_DEVICE_REAR = 2;
+  SENSOR_DEVICE_ALL = 3;
+}
+
+enum insta360.messages.ExtraMetadata.SubMediaType {
+  VIDEO_NORMAL = 0;
+  VIDEO_BULLETTIME = 1;
+  VIDEO_TIMELAPSE = 2;
+  PHOTO_NORMAL = 3;
+  PHOTO_HDR = 4;
+  PHOTO_INTERVALSHOOTING = 5;
+  VIDEO_HDR = 6;
+  PHOTO_BURST = 7;
+  VIDEO_STATIC_TIMELAPSE = 8;
+  VIDEO_TIMESHIFT = 9;
+  PHOTO_AEB_NIGHT_MODE = 10;
+  VIDEO_SUPER_NORMAL = 11;
+  VIDEO_LOOPRECORDING = 12;
+  PHOTO_STARLAPSE = 13;
+  PHOTO_PANO_MODE = 14;
+  VIDEO_FPV = 15;
+  VIDEO_MOVIE = 16;
+  VIDEO_SLOWMOTION = 17;
+}
+
+enum insta360.messages.ExtraMetadata.TriggerSource {
+  Unknown = 0;
+  CameraButton = 1;
+  RemoteControl = 2;
+  USB = 3;
+  BtRemote = 4;
+}
+
+enum insta360.messages.ExtraMetadata.VideoMediaDataRotateAngle {
+  MEDIA_DATA_ROTATE_UNKNOWN = 0;
+  MEDIA_DATA_ROTATE_ANGLE_0 = 1;
+  MEDIA_DATA_ROTATE_ANGLE_180 = 3;
+  MEDIA_DATA_ROTATE_ANGLE_90 = 6;
+  MEDIA_DATA_ROTATE_ANGLE_270 = 8;
+}
+
+enum insta360.messages.ExtraMetadata.VideoPtsType {
+  VIDEO_PTS_UNKNOWN = 0;
+  VIDEO_PTS_MP4 = 1;
+  VIDEO_PTS_EXPOSURE_FILE = 2;
+}
+
+enum insta360.messages.FileType {
+  UNKNOWN_FILE = 0;
+  ETK_FILE = 1;
+  LOG_FILE = 2;
+}
+
+enum insta360.messages.Flicker {
+  FLICKER_AUTO = 0;
+  FLICKER_60HZ = 1;
+  FLICKER_50HZ = 2;
+}
+
+enum insta360.messages.FovType {
+  FOV_WIDE = 0;
+  FOV_LINEAR = 1;
+  FOV_ULTRAWIDE = 2;
+  FOV_NARROW = 3;
+  FOV_POV = 4;
+  FOV_LINEAR_PLUS = 5;
+  FOV_LINEAR_HORIZON = 6;
+  FOV_TYPE_FPV = 7;
+}
+
+enum insta360.messages.FunctionMode {
+  FUNCTION_MODE_NORMAL = 0;
+  FUNCTION_MODE_LIVE_STREAM = 1;
+  FUNCTION_MODE_MOBILE_TIMELAPSE = 2;
+  FUNCTION_MODE_INTERVAL_SHOOTING = 3;
+  FUNCTION_MODE_HIGH_FRAME_RATE = 4;
+  FUNCTION_MODE_BURST = 5;
+  FUNCTION_MODE_NORMAL_IMAGE = 6;
+  FUNCTION_MODE_NORMAL_VIDEO = 7;
+  FUNCTION_MODE_HDR_IMAGE = 8;
+  FUNCTION_MODE_HDR_VIDEO = 9;
+  FUNCTION_MODE_INTERVAL_VIDEO = 10;
+  FUNCTION_MODE_STATIC_TIMELAPSE = 11;
+  FUNCTION_MODE_TIMESHIFT = 12;
+  FUNCTION_MODE_AEB_NIGHT_IMAGE = 13;
+  FUNCTION_MODE_NORMAL_POWER_PANO_IMAGE = 14;
+  FUNCTION_MODE_HDR_POWER_PANO_IMAGE = 15;
+  FUNCTION_MODE_SUPER_VIDEO = 16;
+  FUNCTION_MODE_LOOP_RECORDING_VIDEO = 17;
+  FUNCTION_MODE_STARLAPSE_IMAGE = 18;
+  FUNCTION_MODE_FPV_VIDEO = 19;
+  FUNCTION_MODE_MOVIE_VIDEO = 20;
+  FUNCTION_MODE_SLOWMOTION_VIDEO = 21;
+}
+
+enum insta360.messages.GammaMode {
+  STANDARD = 0;
+  LOG = 1;
+  VIVID = 2;
+}
+
+enum insta360.messages.MediaType {
+  VIDEO = 0;
+  PHOTO = 1;
+  VIDEO_AND_PHOTO = 2;
+  DNG = 3;
+  MP4 = 4;
+  JPG = 5;
+}
+
+enum insta360.messages.NotificationAuthorizationResult.AuthorizationResult {
+  SUCCESS = 0;
+  REJECT = 1;
+  TIMEOUT = 2;
+}
+
+enum insta360.messages.NotificationCaptureStopped.ErrorCode {
+  OVER_TIME_LIMIT = 0;
+  STORAGE_FULL = 1;
+  OTHER_SITUATION = 2;
+  OVER_FILE_NUMBER_LIMIT = 3;
+  LOW_CARD_SPEED = 4;
+  MUXER_STREAM_ERROR = 5;
+  DROP_FRAMES = 6;
+}
+
+enum insta360.messages.NotificationShutdown.ErrorCode {
+  BATTERT_RUNOUT = 0;
+  TEMPERATURE_OVERLIMIT = 1;
+}
+
+enum insta360.messages.NotificationTakePictureStateUpdate.TakePictureState {
+  SHUTTER = 0;
+  COMPRESS = 1;
+  WRITE_FILE = 2;
+}
+
+enum insta360.messages.OpenIperfService.Mode {
+  TCP = 0;
+  UDP = 1;
+}
+
+enum insta360.messages.OptionType {
+  OPTION_UNKNOWN = 0;
+  VIDEO_RESOLUTION = 1;
+  PHOTO_SIZE = 2;
+  VIDEO_BITRATE = 3;
+  AUDIO_BITRATE = 4;
+  AUDIO_SAMPLERATE = 5;
+  ORIGIN_OFFSET = 6;
+  CAPTURE_TIME_LIMIT = 7;
+  GPS_TIMEOUT = 8;
+  REMAINING_CAPTURE_TIME = 9;
+  REMAINING_PICTURES = 10;
+  BATTERY_STATUS = 11;
+  LOCAL_TIME = 12;
+  TIME_ZONE = 13;
+  MUTE = 14;
+  SERIAL_NUMBER = 15;
+  UUID = 16;
+  BUTTON_PRESS_OPTIONS = 17;
+  ACTIVATE_TIME = 19;
+  STORAGE_STATE = 20;
+  LENS_INDEX = 21;
+  MEDIA_OFFSET = 22;
+  SELF_TIMER = 23;
+  GYRO_SAMPLE_RATE = 24;
+  ACC_FULL_SCALE_RANGE = 25;
+  GYRO_FULL_SCALE_RANGE = 26;
+  TAKE_RAW_PICTURE = 27;
+  GAMMA_MODE = 28;
+  MEDIA_TIME = 29;
+  FIRMWAREREVISION = 30;
+  SYS_ADOPTION = 31;
+  CPU_TYPE = 32;
+  GYRO_FILTER = 33;
+  MCTF_ENABLE = 34;
+  SPORT_MODE_ENABLE = 35;
+  WIFI_INFO = 36;
+  WIFI_CHANNEL_LIST = 37;
+  AUTHORIZATION_ID = 38;
+  CALIBRATION_OFFSET = 39;
+  PHOTO_SUB_MODE = 40;
+  VIDEO_SUB_MODE = 41;
+  SECOND_STREAM_RES = 42;
+  WIFI_STATUS = 43;
+  EVO_STATUS_MODE = 44;
+  ORIGIN_OFFSET_3D = 45;
+  MEDIA_OFFSET_3D = 46;
+  CALIBRATION_OFFSET_3D = 47;
+  CAMERA_TYPE = 48;
+  BT_REMOTE_VERSION = 49;
+  BT_REMOTE_TYPE = 50;
+  QUALITY_SETTING = 51;
+  OVERHEAT_PROTECTION = 52;
+  CALIBRATION_ORIENTATION = 53;
+  STANDBY_DURATION = 54;
+  QUICK_CAPTURE_ENABLE = 55;
+  BT_MAC_ADDR = 56;
+  TELEVISION_SYSTEM = 57;
+  SENSOR0_SERIAL_VR360 = 58;
+  SENSOR1_SERIAL_VR360 = 59;
+  SENSOR_SERIAL_VR180 = 60;
+  MOBVOI_LICENSE = 61;
+  MOBVOI_PUBLIC_KEY = 62;
+  GYRO_INFO = 63;
+  SENSOR_ID = 64;
+  INTERNAL_FLOWSTATE = 65;
+  VIDEO_ENCODE_TYPE = 66;
+  SENSOR_INFO = 67;
+  IS_SELFIE = 68;
+  ROLLING_SHUTTER_TIME = 69;
+  GYRO_TIME_STAMP = 70;
+  VIDEO_FOV = 71;
+  STILL_FOV = 72;
+  GYRO_POLYFIT_STATE = 73;
+  GYRO_CALIBRATE_STATE = 74;
+  MOBVOI_LICENSE_VERITY_STATE = 75;
+  FLICKER_GLOBAL = 76;
+  TEMP_VALUE = 77;
+  ORIGIN_OFFSET_V2 = 78;
+  ORIGIN_OFFSET_V3 = 79;
+  MEDIA_OFFSET_V2 = 80;
+  MEDIA_OFFSET_V3 = 81;
+  INSTAPANO_FOCUS_SENSOR = 82;
+  EXPECT_OUTPUT_TYPE = 83;
+  HW_TYPE = 84;
+  CHARGEBOX_CONNECTED_STATUS = 85;
+  BT_CAR_TABLE = 86;
+  PTZ_CTRL = 87;
+  CAMERA_LANGUAGE = 88;
+  HW_BLE_VERSION = 89;
+  FACTORY_CALIBRATION_STATUS = 90;
+  MODULE_TYPE = 91;
+  SFR_CALIBRATION_STATUS = 92;
+  CAMERA_POSTURE = 93;
+  FACTORY_MODE_STATUS = 94;
+  UDISK_MODE = 95;
+  HW_VERSION = 96;
+  BT_WAKEUP_SW = 97;
+  FAC_AGEING_STATUS = 99;
+  RAW10BIT_ENABLE = 100;
+  OPTIONS_NUM = 101;
+}
+
+enum insta360.messages.Options.AccFullScaleRange {
+  RANGE_2G = 0;
+  RANGE_4G = 1;
+  RANGE_8G = 2;
+  RANGE_16G = 3;
+}
+
+enum insta360.messages.Options.AdoptionSystem {
+  PHONE_IOS = 0;
+  PHONE_ANDROID = 1;
+}
+
+enum insta360.messages.Options.BTRemoteType {
+  UNKNOWN_BT_REMOTE = 0;
+  BT_REMOTE_WITHOUT_GPS = 1;
+  BT_REMOTE_WITH_GPS = 2;
+}
+
+enum insta360.messages.Options.Bt_Wakeup_Sw {
+  Bt_Wakeup_Sw_Off = 0;
+  Bt_Wakeup_Sw_On = 1;
+  Bt_Wakeup_Sw_Unknown = 2;
+}
+
+enum insta360.messages.Options.CameraPostureType {
+  CAMERA_POSTURE_ROTATE_0 = 0;
+  CAMERA_POSTURE_ROTATE_90 = 1;
+  CAMERA_POSTURE_ROTATE_180 = 2;
+  CAMERA_POSTURE_ROTATE_270 = 3;
+  CAMERA_POSTURE_UP = 4;
+  CAMERA_POSTURE_DOWN = 5;
+}
+
+enum insta360.messages.Options.EvoStatusMode {
+  UNKNOWN_STATUS_MODE = 0;
+  DEGREE180 = 1;
+  DEGREE360 = 2;
+}
+
+enum insta360.messages.Options.ExpectOutputType {
+  DEFAULT = 0;
+  INSTA_PANO = 1;
+  MULTI_CAMERA = 2;
+  ONE_TAKE = 3;
+}
+
+enum insta360.messages.Options.GyroFullScaleRange {
+  RANGE_250DPS = 0;
+  RANGE_500DPS = 1;
+  RANGE_1000DPS = 2;
+  RANGE_2000DPS = 3;
+}
+
+enum insta360.messages.Options.GyroInfo.GyroPos {
+  INSDEV_IMU_POS_VIN0 = 0;
+  INSDEV_IMU_POS_VIN1 = 1;
+  INSDEV_IMU_POS_UNKNOWN = 2;
+}
+
+enum insta360.messages.Options.GyroInfo.GyroType {
+  INSDEV_IMU_TYPE_20948 = 0;
+  INSDEV_IMU_TYPE_40609 = 1;
+}
+
+enum insta360.messages.Options.HwType {
+  HW_TYPE_UNKNOWN = 0;
+  HW_TYPE_MFI = 1;
+  HW_TYPE_NO_MFI = 2;
+}
+
+enum insta360.messages.Options.LANGUAGE_TYPE {
+  EN = 0;
+  ZH = 1;
+  JA = 2;
+}
+
+enum insta360.messages.Options.QualitySetting {
+  HIGH_QUALITY = 0;
+  LOW_QUALITY = 1;
+}
+
+enum insta360.messages.Options.TelevisionSystem {
+  NTSC = 0;
+  PAL = 1;
+}
+
+enum insta360.messages.Options.UdiskMode {
+  UDISK_MODE_PC = 0;
+  UDISK_MODE_ANDROID = 1;
+}
+
+enum insta360.messages.Options.VideoEncodeType {
+  ENCODE_H264 = 0;
+  ENCODE_H265 = 1;
+}
+
+enum insta360.messages.Options.WifiInfo.Mode {
+  AP = 0;
+  STA = 1;
+  P2P = 2;
+}
+
+enum insta360.messages.Options.WifiStatus {
+  AUTO = 0;
+  ON = 1;
+}
+
+enum insta360.messages.PTZFactoryType {
+  PTZ_OPTION_UNKNOWN = 0;
+  LINK_TEST = 1;
+  TOUCH_IC = 2;
+  AF_CORRECT = 3;
+  HALL_SWITCH = 4;
+  RC_KEY = 5;
+  SENSOR_SERIAL_GMS586 = 6;
+  PTZ_GIMBAL_MIDPOINT_CALI = 7;
+  PTZ_INTER_DETECT = 8;
+  PTZ_MC_SELF_TEST = 9;
+  PTZ_OPTIONS_NUM = 10;
+}
+
+enum insta360.messages.PTZInterDetectType {
+  PTZ_MODE_NULL = 0;
+  PTZ_MODE_NEAR_CHECK = 1;
+  PTZ_MODE_FAR_CHECK = 2;
+}
+
+enum insta360.messages.PTZLensType {
+  NOT_INSTALLED = 0;
+  INSTALLED_ANGLE_DILATOR = 1;
+  INSTALLED_ND_MIRROR = 2;
+  UNKNOWN = 3;
+}
+
+enum insta360.messages.PTZRCKeyType {
+  RC_KEY_RESET = 0;
+  RC_KEY_UP = 1;
+  RC_KEY_DOWN = 2;
+  RC_KEY_LEFT = 3;
+  RC_KEY_RIGHT = 4;
+  RC_KEY_MIDDLE = 5;
+  TP_KEY_PRESS = 6;
+}
+
+enum insta360.messages.PhotoSize {
+  Size_6912_3456 = 0;
+  Size_6272_3136 = 1;
+  Size_6080_3040 = 2;
+  Size_4000_3000 = 3;
+  Size_4000_2250 = 4;
+  Size_5212_3542 = 5;
+  Size_5312_2988 = 6;
+  Size_8000_6000 = 7;
+  Size_8000_4500 = 8;
+  Size_2976_2976 = 9;
+  Size_5984_5984 = 10;
+}
+
+enum insta360.messages.PhotoSubMode {
+  PHOTO_SINGLE = 0;
+  PHOTO_HDR = 1;
+  PHOTO_INTERVAL = 2;
+  PHOTO_BURST = 3;
+  PHOTO_AEB_NIGHT = 4;
+  PHOTO_INSTA_PANO = 5;
+  PHOTO_INSTA_PANO_HDR = 6;
+  PHOTO_STARLAPSE = 7;
+}
+
+enum insta360.messages.PhotographyOptionType {
+  PHOTOGRAPHY_OPTION_UNKNOWN = 0;
+  CHANNEL = 1;
+  BRIGHTNESS = 2;
+  CONTRAST = 3;
+  SATURATION = 4;
+  HUE = 5;
+  SHARPNESS = 6;
+  EXPOSURE_BIAS = 7;
+  EXPOSURE_MODE = 8;
+  EXPOSURE_PROG = 9;
+  EXPOSURE_MANUAL = 10;
+  AE_METER_MODE = 11;
+  AE_MANUAL_METER_WEIGHT = 12;
+  WHITE_BALANCE = 13;
+  FLICKER = 14;
+  EV_INDEX = 15;
+  AUTO_MODE_VIDEO_PARAM = 16;
+  AUTO_MODE_STILL_PARAM = 17;
+  VIDEO_GAMMA_MODE = 18;
+  LONG_EXPOSURE_MANUAL = 19;
+  STILL_EXPOSURE_OPTIONS = 20;
+  VIDEO_EXPOSURE_OPTIONS = 21;
+  PREVIEW_MCTF_ENABLE = 22;
+  PREVIEW_SPORT_MODE_ENABLE = 23;
+  VIDEO_ISO_TOP_LIMIT = 24;
+  RAW_CAPTURE_TYPE = 25;
+  PHOTOGRAPHY_SELF_TIMER = 26;
+  AEB_CAPTURE_NUM = 27;
+  PREVIEW_SPORT_LEVEL = 28;
+  RECORD_DURAION = 29;
+  PHOTO_SIZE_ID = 30;
+  RECORD_RESOLUTION = 31;
+  PHOTO_GRAPHY_BITRATE = 32;
+  FOV_TYPE = 33;
+  FLOWSTATE_BASE_TYPE = 34;
+  COLOR_MODE = 35;
+  RES_REC_LIMIT = 36;
+  ACCELERATE_FREQUENCY = 37;
+  FOCAL_LENGTH_VALUE = 38;
+  WHITE_BALANCE_VALUE = 39;
+  PHOTO_RESOLUTION = 40;
+  PHOTO_GRAPHY_OPTIONS_TYPE_NUM = 41;
+}
+
+enum insta360.messages.PhotographyOptions.AEMeterMode {
+  AE_METER_MODE_NORMAL = 0;
+  AE_METER_MODE_MANUAL = 1;
+}
+
+enum insta360.messages.PhotographyOptions.COLOR_MODE {
+  COLOR_MODE_NORMAL = 0;
+  COLOR_MODE_LOG = 1;
+  COLOR_MODE_VIVID = 2;
+  COLOR_MODE_HDR = 3;
+}
+
+enum insta360.messages.PhotographyOptions.ExposureManual.RelateMode {
+  RELATE_MODE_VIDEO = 0;
+  RELATE_MODE_STILL = 1;
+  RELATE_MODE_VIDEO_AND_STILL = 2;
+}
+
+enum insta360.messages.PhotographyOptions.ExposureMode {
+  EXP_MODE_AUTO = 0;
+  EXP_MODE_PROGRAM = 1;
+  EXP_MODE_MANUAL = 2;
+}
+
+enum insta360.messages.PhotographyOptions.ExposureOptions.Program {
+  AUTO = 0;
+  ISO_PRIORITY = 1;
+  SHUTTER_PRIORITY = 2;
+  MANUAL = 3;
+  ADAPTIVE = 4;
+}
+
+enum insta360.messages.PhotographyOptions.ExposureProg.ProgMode {
+  PROG_MODE_OFF = 0;
+  PROG_MODE_ISO = 1;
+  PROG_MODE_SHUTTER_SPEED = 2;
+}
+
+enum insta360.messages.PhotographyOptions.PREVIEW_SPORT_LEVEL {
+  PREVIEW_SPORT_AUTO = 0;
+  PREVIEW_SPORT_FAST = 1;
+  PREVIEW_SPORT_FASTER = 2;
+}
+
+enum insta360.messages.PhotographyOptions.ShutterSpeed {
+  SPEED_AUTO = 0;
+  SPEED_60 = 1;
+  SPEED_30 = 2;
+  SPEED_15 = 3;
+  SPEED_8 = 4;
+  SPEED_4 = 5;
+  SPEED_2 = 6;
+  SPEED_1P6 = 7;
+  SPEED_1P3 = 8;
+  SPEED_1 = 9;
+  SPEED_1D1P25 = 10;
+  SPEED_1D1P67 = 11;
+  SPEED_1D2 = 12;
+  SPEED_1D2P5 = 13;
+  SPEED_1D3 = 14;
+  SPEED_1D4 = 15;
+  SPEED_1D5 = 16;
+  SPEED_1D6P25 = 17;
+  SPEED_1D8P = 18;
+  SPEED_1D10 = 19;
+  SPEED_1D12P5 = 20;
+  SPEED_1D15 = 21;
+  SPEED_1D20 = 22;
+  SPEED_1D25 = 23;
+  SPEED_1D30 = 24;
+  SPEED_1D40 = 25;
+  SPEED_1D50 = 26;
+  SPEED_1D60 = 27;
+  SPEED_1D80 = 28;
+  SPEED_1D100 = 29;
+  SPEED_1D120 = 30;
+  SPEED_1D160 = 31;
+  SPEED_1D200 = 32;
+  SPEED_1D240 = 33;
+  SPEED_1D320 = 34;
+  SPEED_1D400 = 35;
+  SPEED_1D500 = 36;
+  SPEED_1D640 = 37;
+  SPEED_1D800 = 38;
+  SPEED_1D1000 = 39;
+  SPEED_1D1250 = 40;
+  SPEED_1D1600 = 41;
+  SPEED_1D2000 = 42;
+  SPEED_1D2500 = 43;
+  SPEED_1D3200 = 44;
+  SPEED_1D4000 = 45;
+  SPEED_1D5000 = 46;
+  SPEED_1D6400 = 47;
+  SPEED_1D8000 = 48;
+}
+
+enum insta360.messages.PhotographyOptions.WhiteBalance {
+  WB_AUTO = 0;
+  WB_2700K = 1;
+  WB_4000K = 2;
+  WB_5000K = 3;
+  WB_6500K = 4;
+  WB_7500K = 5;
+}
+
+enum insta360.messages.RawCaptureType {
+  RAW_CAPTURE_TYPE_OFF = 0;
+  RAW_CAPTURE_TYPE_DNG = 1;
+  RAW_CAPTURE_TYPE_RAW = 2;
+  RAW_CAPTURE_TYPE_PURESHOT = 3;
+}
+
+enum insta360.messages.Sensor.Type {
+  PANO_577 = 0;
+  WIDE_577 = 1;
+  WIDE_283 = 2;
+  WIDE_586 = 3;
+  AF_586 = 4;
+  PANO_283 = 5;
+  PANO_586 = 6;
+  ACTION_577 = 7;
+}
+
+enum insta360.messages.SensorDevice {
+  SENSOR_DEVICE_UNKNOWN = 0;
+  SENSOR_DEVICE_FRONT = 1;
+  SENSOR_DEVICE_REAR = 2;
+  SENSOR_DEVICE_ALL = 3;
+}
+
+enum insta360.messages.SetKeyTimePoint.KeyTimePointType {
+  INSTANT = 0;
+  START = 1;
+  END = 2;
+}
+
+enum insta360.messages.SubmodeOptionType {
+  SUBMODE_OPTION_UNKNOWN = 0;
+  SUB_SELF_TIMER = 1;
+  SUB_MODE_OPTIONS_TYPE_NUM = 2;
+}
+
+enum insta360.messages.TakePicture.Mode {
+  NORMAL = 0;
+  AEB = 1;
+  BURST = 3;
+  AEB_NIGHT = 4;
+}
+
+enum insta360.messages.TemperatureState {
+  TEMP_LOW = 0;
+  TEMP_ALERT = 1;
+  TEMP_MIDDLE = 2;
+  TEMP_HIGH = 3;
+}
+
+enum insta360.messages.TimelapseMode {
+  TIMELAPSE_MIXED = 0;
+  MOBILE_TIMELAPSE_VIDEO = 1;
+  TIMELAPSE_INTERVAL_SHOOTING = 2;
+  STATIC_TIMELAPSE_VIDEO = 3;
+  TIMELAPSE_INTERVAL_VIDEO = 4;
+  TIMELAPSE_STARLAPSE_SHOOTING = 5;
+}
+
+enum insta360.messages.TimelapseOptions.OutputType {
+  DoNotChange = 0;
+  Video = 1;
+  Images = 2;
+}
+
+enum insta360.messages.VideoResolution {
+  RES_3840_1920P30 = 0;
+  RES_2560_1280P30 = 1;
+  RES_1920_960P30 = 2;
+  RES_2560_1280P60 = 3;
+  RES_2048_512P120 = 4;
+  RES_3328_832P60 = 5;
+  RES_3072_1536P30 = 6;
+  RES_2240_1120P30 = 7;
+  RES_2240_1120P24 = 8;
+  RES_1440_720P30 = 9;
+  RES_2880_2880P30 = 10;
+  RES_3840_1920P60 = 11;
+  RES_3840_1920P50 = 12;
+  RES_3008_1504P100 = 13;
+  RES_960_480P30 = 14;
+  RES_3040_1520P30 = 15;
+  RES_2176_1088P30 = 16;
+  RES_720_360P30 = 17;
+  RES_480_240P30 = 18;
+  RES_2880_2880P25 = 19;
+  RES_2880_2880P24 = 20;
+  RES_3840_1920P20 = 21;
+  RES_1920_960P20 = 22;
+  RES_3840_2160P60 = 23;
+  RES_3840_2160P30 = 24;
+  RES_2720_1530P100 = 25;
+  RES_1920_1080P200 = 26;
+  RES_1920_1080P240 = 27;
+  RES_1920_1080P120 = 28;
+  RES_1920_1080P30 = 29;
+  RES_5472_3078P30 = 30;
+  RES_4000_3000P30 = 31;
+  RES_854_640P30 = 32;
+  RES_720_406P30 = 33;
+  RES_424_240P15 = 34;
+  RES_1024_512P30 = 35;
+  RES_640_320P30 = 36;
+  RES_5312_2988P30 = 37;
+  RES_2720_1530P60 = 38;
+  RES_2720_1530P30 = 39;
+  RES_1920_1080P60 = 40;
+  RES_2720_2040P30 = 41;
+  RES_1920_1440P30 = 42;
+  RES_1280_720P30 = 43;
+  RES_1280_960P30 = 44;
+  RES_1152_768P30 = 45;
+  RES_5312_2988P25 = 46;
+  RES_5312_2988P24 = 47;
+  RES_3840_2160P25 = 48;
+  RES_3840_2160P24 = 49;
+  RES_2720_1530P25 = 50;
+  RES_2720_1530P24 = 51;
+  RES_1920_1080P25 = 52;
+  RES_1920_1080P24 = 53;
+  RES_4000_3000P25 = 54;
+  RES_4000_3000P24 = 55;
+  RES_2720_2040P25 = 56;
+  RES_2720_2040P24 = 57;
+  RES_1920_1440P25 = 58;
+  RES_1920_1440P24 = 59;
+  RES_2560_1440P30 = 60;
+  RES_2560_1440P60 = 61;
+  RES_1920_1440P60 = 62;
+  RES_1440_2560P30 = 63;
+  RES_1080_1920P30 = 64;
+  RES_1440_1920P30 = 65;
+  RES_1440_2560P60 = 66;
+  RES_1440_1920P60 = 67;
+  RES_1080_1920P60 = 68;
+  RES_2560_1440P25 = 69;
+  RES_1440_2560P25 = 70;
+  RES_1080_1920P25 = 71;
+  RES_720_1280P30 = 72;
+  RES_960_1280P30 = 73;
+  RES_1152_1152P30 = 74;
+  RES_640_360P30 = 75;
+  RES_640_480P30 = 76;
+  RES_360_640P30 = 77;
+  RES_480_640P30 = 78;
+  RES_368_368P30 = 79;
+  RES_854_854P30 = 80;
+  RES_1920_1080P50 = 81;
+  RES_1080_1920P50 = 82;
+  RES_2560_1440P50 = 83;
+  RES_1440_2560P50 = 84;
+  RES_1080_1920P24 = 85;
+  RES_2560_1440P24 = 86;
+  RES_1440_2560P24 = 87;
+  RES_1080_1920P120 = 88;
+  RES_1280_1280P30 = 89;
+  RES_2880_2880P15 = 90;
+  RES_1440_720P15 = 91;
+  RES_3840_2160P50 = 92;
+  RES_1280_1280P25 = 93;
+  RES_3040_3040P24 = 94;
+  RES_3040_3040P25 = 95;
+  RES_3040_3040P30 = 96;
+  RES_3840_1920P24 = 97;
+  RES_3840_1920P25 = 98;
+  RES_3040_1520P50 = 99;
+  RES_2720_1530P50 = 100;
+  RES_5312_3552P24 = 101;
+  RES_5312_3552P25 = 102;
+  RES_5312_3552P30 = 103;
+  RES_5472_2328P24 = 104;
+  RES_5472_2328P25 = 105;
+  RES_5472_2328P30 = 106;
+  RES_1600_900P30 = 107;
+  RES_1760_990P30 = 108;
+  RES_3840_1634P30 = 109;
+  RES_3840_1634P25 = 110;
+  RES_3840_1634P24 = 111;
+  RES_6720_2856P25 = 112;
+  RES_6720_2856P24 = 113;
+  RES_6016_2560P25 = 114;
+  RES_6016_2560P24 = 115;
+  RES_NUM = 116;
+}
+
+enum insta360.messages.VideoSubMode {
+  VIDEO_NORMAL = 0;
+  VIDEO_BULLETTIME = 1;
+  VIDEO_TIMELAPSE = 2;
+  VIDEO_HDR = 3;
+  VIDEO_TIMESHIFT = 4;
+  VIDEO_SUPER = 5;
+  VIDEO_LOOPRECORDING = 6;
+  VIDEO_FPV = 7;
+  VIDEO_MOVIE = 8;
+  VIDEO_SLOW_MOTION = 9;
+}
+
+message insta360.fileinfo.FileInfo {   // sizeof=28
+  optional string file_path = 1;
+  optional bytes metadata = 2;
+}
+
+message insta360.fileinfo.FileInfo_List {   // sizeof=20
+  repeated insta360.fileinfo.FileInfo file_info = 1;
+}
+
+message insta360.messages.BTPeripheral {   // sizeof=28
+  optional string name = 1;
+  optional bytes mac_addr = 2;
+}
+
+message insta360.messages.BatteryStatus {   // sizeof=36
+  optional insta360.messages.BatteryStatus.PowerType power_type = 1;
+  optional uint32 battery_level = 2;
+  optional uint32 battery_scale = 3;
+}
+
+message insta360.messages.ButtonPressOptions {   // sizeof=92
+  optional insta360.messages.ButtonPressMode click = 1;
+  optional insta360.messages.ButtonPressMode double_click = 2;
+  optional insta360.messages.ButtonPressMode triple_click = 3;
+  optional insta360.messages.ButtonPressMode long_press = 4;
+  optional insta360.messages.ButtonPressMode short_press = 5;
+  optional insta360.messages.ButtonPressMode shutdown_click = 6;
+  optional insta360.messages.ButtonPressMode shutdown_double_click = 7;
+  optional insta360.messages.ButtonPressMode shutdown_triple_click = 8;
+  optional insta360.messages.ButtonPressMode shutdown_long_press = 9;
+  optional insta360.messages.ButtonPressMode shutdown_short_press = 10;
+}
+
+message insta360.messages.ButtonStatus {   // sizeof=20
+  optional insta360.messages.ButtonStatus.ButtonState state = 1;
+}
+
+message insta360.messages.CalibrateGyro {   // sizeof=20
+  optional uint32 gyro_count = 1;
+}
+
+message insta360.messages.CameraCaptureStatus {   // sizeof=40
+  optional insta360.messages.CameraCaptureState state = 1;
+  optional uint32 capture_time = 2;
+  optional uint32 capture_nums = 3;
+  optional string keyTimePointDetail = 4;
+}
+
+message insta360.messages.CaptureStatus {   // sizeof=32
+  optional insta360.messages.CameraCaptureState state = 1;
+  optional uint32 capture_time = 2;
+  optional string keyTimePointDetail = 3;
+}
+
+message insta360.messages.ChargeboxConnectedStatus {   // sizeof=24
+  optional insta360.messages.ChargeboxConnectedStatus.ChargeboxConnectedType chargebox_connected_state = 1;
+  optional insta360.messages.BatteryStatus chargingbox_battery_status = 2;
+}
+
+message insta360.messages.CheckAuthorization {   // sizeof=16
+  optional string id = 1;
+}
+
+message insta360.messages.CheckAuthorizationResp {   // sizeof=20
+  optional insta360.messages.CheckAuthorizationResp.AuthorizationStatus authorization_status = 1;
+}
+
+message insta360.messages.ConnectToBTPeripheral {   // sizeof=16
+  optional insta360.messages.BTPeripheral peripheral = 1;
+}
+
+message insta360.messages.DeleteFiles {   // sizeof=20
+  repeated string uri = 1;
+}
+
+message insta360.messages.DeleteFilesResp {   // sizeof=20
+  repeated string fail_uri = 1;
+}
+
+message insta360.messages.Error {   // sizeof=24
+  optional insta360.messages.Error.ErrorCode code = 1;
+  optional string message = 2;
+}
+
+message insta360.messages.ExposureOptions {   // sizeof=40
+  optional insta360.messages.ExposureOptions.Program program = 1;
+  optional uint32 iso = 2;
+  optional double shutter_speed = 3;
+}
+
+message insta360.messages.ExtraMetadata {   // sizeof=528
+  optional string serial_number = 1;
+  optional string camera_type = 2;
+  optional string fw_version = 3;
+  optional string file_type = 4;
+  optional string offset = 5;
+  optional string ip = 6;
+  optional uint64 creation_time = 7;
+  optional uint64 export_time = 8;
+  optional uint64 file_size = 9;
+  optional uint32 total_time = 10;
+  optional bytes gps = 11;
+  optional bytes orientation = 12;
+  optional insta360.messages.ExtraMetadata.ExtraUserOptions user_options = 13;
+  optional bytes gyro = 14;
+  optional insta360.messages.ExtraMetadata.HDR_STATE hdr_state = 15;
+  optional string hdr_identifier = 16;
+  optional string original_offset = 17;
+  optional insta360.messages.ExtraMetadata.TriggerSource trigger_source = 18;
+  optional insta360.messages.ExtraMetadata.Vector2 dimension = 19;
+  optional int32 frame_rate = 20;
+  optional insta360.messages.ExtraMetadata.Vector2 image_translate = 21;
+  optional string gamma_mode = 22;
+  optional insta360.messages.ExtraMetadata.GyroIndex thumbnail_gyro_index = 23;
+  optional int64 first_frame_timestamp = 24;
+  optional double rolling_shutter_time = 25;
+  optional insta360.messages.ExtraMetadata.FileGroupInfo file_group_info = 26;
+  optional insta360.messages.ExtraMetadata.WindowCropInfo window_crop_info = 27;
+  optional double gyro_timestamp = 28;
+  optional bool is_has_gyro_timestamp = 29;
+  optional uint32 timelapse_interval = 30;
+  optional bytes gyro_calib = 31;
+  optional insta360.messages.ExtraMetadata.EvoStatusMode evo_status_mode = 32;
+  optional string evo_status_id = 33;
+  optional string original_offset_3d = 34;
+  repeated insta360.messages.ExtraMetadata.GpsSource gps_sources = 35;
+  optional int64 first_gps_timestamp = 36;
+  optional bytes orientation_calib = 37;
+  optional bool is_collected = 38;
+  optional uint64 recycle_time = 39;
+  optional uint32 total_frames = 40;
+  optional bool is_selfie = 41;
+  optional bool is_flowstate_online = 42;
+  optional bool is_dewarp = 43;
+  optional insta360.messages.ExtraMetadata.Vector2 resolution_size = 44;
+  optional insta360.messages.ExtraMetadata.Battery_type battery_type = 45;
+  optional insta360.messages.ExtraMetadata.Camera_Posture cam_posture = 46;
+  optional insta360.messages.ExtraMetadata.Image_FovType fov_type = 47;
+  optional double distance = 48;
+  optional double fov = 49;
+  optional insta360.messages.ExtraMetadata.Gyro_FilterType gyro_filter_type = 50;
+  optional insta360.messages.ExtraMetadata.GyroType gyro_type = 51;
+  optional insta360.messages.ExtraMetadata.VideoMediaDataRotateAngle media_data_rotate_angel = 52;
+  optional string offset_v2 = 53;
+  optional string offset_v3 = 54;
+  optional string original_offset_v2 = 55;
+  optional string original_offset_v3 = 56;
+  optional insta360.messages.ExtraMetadata.SensorDevice focusSensor = 57;
+  optional insta360.messages.ExtraMetadata.ExpectOutputType expectOutputType = 58;
+  optional bool timelapse_interval_in_millisecond = 59;
+  repeated float photo_rot = 60;
+  optional insta360.messages.ExtraMetadata.AudioModeType audio_mode = 61;
+  optional bool is_raw_gyro = 62;
+  optional insta360.messages.ExtraMetadata.RawCaptureType raw_capture_type = 63;
+  optional insta360.messages.ExtraMetadata.VideoPtsType pts_type = 64;
+  optional insta360.messages.ExtraMetadata.GyroConfigInfo gyro_cfg_info = 65;
+}
+
+message insta360.messages.ExtraMetadata.ExtraUserOptions {   // sizeof=80
+  optional string filter = 1;
+  optional string befilter = 2;
+  optional bytes euler = 3;
+  optional bool rm_purple = 4;
+  optional uint32 gyro_calibrate_mode = 5;
+  optional bool euler_enable = 6;
+  optional insta360.messages.ExtraMetadata.ExtraUserOptions.LogoType logo_type = 7;
+  optional string adjustFilters = 8;
+  optional string lut_filter = 9;
+  repeated insta360.messages.ExtraMetadata.ExtraUserOptions.OffsetConvertState offset_convert_states = 10;
+}
+
+message insta360.messages.ExtraMetadata.FileGroupInfo {   // sizeof=40
+  optional insta360.messages.ExtraMetadata.SubMediaType type = 1;
+  optional uint32 index = 2;
+  optional string identify = 3;
+  optional uint32 total = 4;
+}
+
+message insta360.messages.ExtraMetadata.GyroConfigInfo {   // sizeof=28
+  optional uint32 acc_range = 1;
+  optional uint32 gyro_range = 2;
+}
+
+message insta360.messages.ExtraMetadata.GyroIndex {   // sizeof=32
+  optional int32 index = 1;
+  optional int64 timestamp = 2;
+}
+
+message insta360.messages.ExtraMetadata.Vector2 {   // sizeof=28
+  optional int32 x = 1;
+  optional int32 y = 2;
+}
+
+message insta360.messages.ExtraMetadata.WindowCropInfo {   // sizeof=44
+  optional uint32 src_width = 1;
+  optional uint32 src_height = 2;
+  optional uint32 dst_width = 3;
+  optional uint32 dst_height = 4;
+}
+
+message insta360.messages.GetCurrentButtonStatusResp {   // sizeof=16
+  optional insta360.messages.ButtonStatus status = 1;
+}
+
+message insta360.messages.GetCurrentCaptureStatusResp {   // sizeof=16
+  optional insta360.messages.CameraCaptureStatus status = 1;
+}
+
+message insta360.messages.GetFile {   // sizeof=20
+  optional insta360.messages.FileType file_type = 1;
+}
+
+message insta360.messages.GetFileExtra {   // sizeof=28
+  optional string uri = 1;
+  optional uint32 extra_type = 2;
+  optional insta360.messages.GetFileExtra.GyroOptions gyro_options = 3;
+}
+
+message insta360.messages.GetFileExtra.GyroOptions {   // sizeof=20
+  optional insta360.messages.GetFileExtra.GyroOptions.IndexRange index_range = 1;
+  optional insta360.messages.GetFileExtra.GyroOptions.TimeRange time_range = 2;
+}
+
+message insta360.messages.GetFileExtra.GyroOptions.IndexRange {   // sizeof=28
+  optional int32 start = 1;
+  optional int32 count = 2;
+}
+
+message insta360.messages.GetFileExtra.GyroOptions.TimeRange {   // sizeof=40
+  optional int64 start = 1;
+  optional int64 duration = 2;
+}
+
+message insta360.messages.GetFileFinish {   // sizeof=20
+  optional insta360.messages.FileType file_type = 1;
+}
+
+message insta360.messages.GetFileList {   // sizeof=36
+  optional insta360.messages.MediaType media_type = 1;
+  optional uint32 start = 2;
+  optional uint32 limit = 3;
+}
+
+message insta360.messages.GetFileListResp {   // sizeof=28
+  repeated string uri = 1;
+  optional uint32 total_count = 2;
+}
+
+message insta360.messages.GetFileResp {   // sizeof=16
+  optional string uri = 1;
+}
+
+message insta360.messages.GetFlowstateEnableResp {   // sizeof=20
+  optional uint32 enable = 1;
+}
+
+message insta360.messages.GetGyro {   // sizeof=20
+  optional uint32 count = 1;
+}
+
+message insta360.messages.GetGyroResp {   // sizeof=24
+  optional bytes gyroes = 1;
+}
+
+message insta360.messages.GetOptions {   // sizeof=20
+  repeated insta360.messages.OptionType option_types = 1;
+}
+
+message insta360.messages.GetOptionsResp {   // sizeof=24
+  repeated insta360.messages.OptionType option_types = 1;
+  optional insta360.messages.Options value = 2;
+}
+
+message insta360.messages.GetPhotographyOptions {   // sizeof=28
+  repeated insta360.messages.PhotographyOptionType option_types = 1;
+  optional insta360.messages.FunctionMode function_mode = 2;
+}
+
+message insta360.messages.GetPhotographyOptionsResp {   // sizeof=24
+  repeated insta360.messages.PhotographyOptionType option_types = 1;
+  optional insta360.messages.PhotographyOptions value = 2;
+}
+
+message insta360.messages.GetPtzOptions {   // sizeof=20
+  repeated insta360.messages.PTZFactoryType option_types = 1;
+}
+
+message insta360.messages.GetPtzOptionsResp {   // sizeof=24
+  repeated insta360.messages.PTZFactoryType option_types = 1;
+  optional insta360.messages.PtzCtrlInfo value = 2;
+}
+
+message insta360.messages.GetSubmodeOptions {   // sizeof=28
+  repeated insta360.messages.SubmodeOptionType option_types = 1;
+  optional insta360.messages.FunctionMode function_mode = 2;
+}
+
+message insta360.messages.GetSubmodeOptionsResp {   // sizeof=24
+  repeated insta360.messages.SubmodeOptionType option_types = 1;
+  optional insta360.messages.SubmodeOptions value = 2;
+}
+
+message insta360.messages.GetTimelapseOptions {   // sizeof=20
+  optional insta360.messages.TimelapseMode mode = 1;
+}
+
+message insta360.messages.GetTimelapseOptionsResp {   // sizeof=16
+  optional insta360.messages.TimelapseOptions timelapse_options = 1;
+}
+
+message insta360.messages.NotificationAuthorizationResult {   // sizeof=20
+  optional insta360.messages.NotificationAuthorizationResult.AuthorizationResult authorization_result = 1;
+}
+
+message insta360.messages.NotificationBatteryLow {   // sizeof=16
+  optional insta360.messages.BatteryStatus battery_status = 1;
+}
+
+message insta360.messages.NotificationBatteryUpdate {   // sizeof=16
+  optional insta360.messages.BatteryStatus battery_status = 1;
+}
+
+message insta360.messages.NotificationCaptureStopped {   // sizeof=24
+  optional insta360.messages.NotificationCaptureStopped.ErrorCode err_code = 1;
+  optional insta360.messages.Video video = 2;
+}
+
+message insta360.messages.NotificationCardUpdate {   // sizeof=28
+  optional insta360.messages.CardState state = 1;
+  optional insta360.messages.CardLocation location = 2;
+}
+
+message insta360.messages.NotificationExposureUpdate {   // sizeof=28
+  optional insta360.messages.FunctionMode function_mode = 1;
+  optional insta360.messages.ExposureOptions still_exposure = 2;
+  optional insta360.messages.ExposureOptions video_exposure = 3;
+}
+
+message insta360.messages.NotificationShutdown {   // sizeof=24
+  optional insta360.messages.NotificationShutdown.ErrorCode error_code = 1;
+  optional string message = 2;
+}
+
+message insta360.messages.NotificationTakePictureStateUpdate {   // sizeof=20
+  optional insta360.messages.NotificationTakePictureStateUpdate.TakePictureState state = 1;
+}
+
+message insta360.messages.NotificationTimeLapseStatusUpdate {   // sizeof=20
+  optional uint32 interval_count = 1;
+}
+
+message insta360.messages.NotificatoinConnectedToPeripheral {   // sizeof=16
+  optional insta360.messages.BTPeripheral peripheral = 1;
+}
+
+message insta360.messages.NotificatoinDisconnectedPeripheral {   // sizeof=16
+  optional insta360.messages.BTPeripheral peripheral = 1;
+}
+
+message insta360.messages.NotificatoinDiscoverBTPeripheral {   // sizeof=20
+  repeated insta360.messages.BTPeripheral peripherals = 1;
+}
+
+message insta360.messages.OpenIperfService {   // sizeof=20
+  optional insta360.messages.OpenIperfService.Mode mode = 1;
+}
+
+message insta360.messages.Options {   // sizeof=688
+  optional insta360.messages.VideoResolution video_resolution = 1;
+  optional insta360.messages.PhotoSize photo_size = 2;
+  optional uint32 video_bitrate = 3;
+  optional uint32 audio_bitrate = 4;
+  optional uint32 audio_samplerate = 5;
+  optional string origin_offset = 6;
+  optional uint32 capture_time_limit = 7;
+  optional uint32 gps_timeout = 8;
+  optional uint32 remaining_capture_time = 9;
+  optional uint32 remaining_pictures = 10;
+  optional insta360.messages.BatteryStatus battery_status = 11;
+  optional uint64 local_time = 12;
+  optional int32 time_zone_seconds_from_GMT = 13;
+  optional bool mute = 14;
+  optional string serial_number = 15;
+  optional string UUID = 16;
+  optional insta360.messages.ButtonPressOptions pressOptions = 17;
+  optional uint64 activate_time = 19;
+  optional insta360.messages.StorageState storage_state = 20;
+  optional uint32 lens_index = 21;
+  optional string media_offset = 22;
+  optional uint32 self_timer = 23;
+  optional uint32 gyro_sample_rate = 24;
+  optional insta360.messages.Options.AccFullScaleRange acc_range = 25;
+  optional insta360.messages.Options.GyroFullScaleRange gyro_range = 26;
+  optional bool take_raw_picture = 27;
+  optional insta360.messages.GammaMode gamma_mode = 28;
+  optional int64 media_time = 29;
+  optional string firmwareRevision = 30;
+  optional insta360.messages.Options.AdoptionSystem sys_adoption = 31;
+  optional string cpu_type = 32;
+  optional insta360.messages.Options.GyroFilterConfig gyro_filter_config = 33;
+  optional bool mctf_enable = 34;
+  optional bool sport_mode_enable = 35;
+  optional insta360.messages.Options.WifiInfo wifi_info = 36;
+  optional insta360.messages.Options.WifiChannelList wifi_channel_list = 37;
+  optional string authorization_id = 38;
+  optional string calibration_offset = 39;
+  optional insta360.messages.PhotoSubMode photo_sub_mode = 40;
+  optional insta360.messages.VideoSubMode video_sub_mode = 41;
+  optional insta360.messages.VideoResolution second_stream_res = 42;
+  optional insta360.messages.Options.WifiStatus wifi_status = 43;
+  optional insta360.messages.Options.EvoStatusMode evo_status_mode = 44;
+  optional string origin_offset_3d = 45;
+  optional string media_offset_3d = 46;
+  optional string calibration_offset_3d = 47;
+  optional string camera_type = 48;
+  optional string bt_remote_version = 49;
+  optional insta360.messages.Options.BTRemoteType bt_remote_type = 50;
+  optional insta360.messages.Options.QualitySetting quality_setting = 51;
+  optional bool over_heat_protection = 52;
+  optional bytes calibration_orientation = 53;
+  optional uint32 standby_duration = 54;
+  optional bool quick_capture_enable = 55;
+  optional string bt_mac_addr = 56;
+  optional insta360.messages.Options.TelevisionSystem television_system = 57;
+  optional string sensor0_serial_vr360 = 58;
+  optional string sensor1_serial_vr360 = 59;
+  optional string sensor_serial_vr180 = 60;
+  optional string mobvoi_license = 61;
+  optional string mobvoi_public_key = 62;
+  optional insta360.messages.Options.GyroInfo gyro_info = 63;
+  optional string sensor_id = 64;
+  optional bool enableInternalFlowstate = 65;
+  optional insta360.messages.Options.VideoEncodeType video_encode_type = 66;
+  optional insta360.messages.Sensor sensor = 67;
+  optional bool is_selfie = 68;
+  optional double rolling_shutter_time = 69;
+  optional double gyro_timestamp = 70;
+  optional insta360.messages.FovType video_fov = 71;
+  optional insta360.messages.FovType still_fov = 72;
+  optional bool Gyro_Polyfit_State = 73;
+  optional bool Gyro_Calibrate_State = 74;
+  optional bool mobvoi_license_verity_state = 75;
+  optional insta360.messages.Flicker flicker = 76;
+  optional int32 temp_value = 77;
+  optional string origin_offset_v2 = 78;
+  optional string origin_offset_v3 = 79;
+  optional string media_offset_v2 = 80;
+  optional string media_offset_v3 = 81;
+  optional insta360.messages.SensorDevice focusSensor = 82;
+  optional insta360.messages.Options.ExpectOutputType expectOutputType = 83;
+  optional insta360.messages.Options.HwType hw_type = 84;
+  optional insta360.messages.ChargeboxConnectedStatus ChargeboxConnectedStatus = 85;
+  optional insta360.messages.Options.BTCarCmdInfo btcarcmdinfo = 86;
+  optional insta360.messages.PtzCtrlInfo ptzctrl = 87;
+  optional insta360.messages.Options.LANGUAGE_TYPE camera_language = 88;
+  optional string ble_version = 89;
+  optional uint32 Factory_Calibration_Status = 90;
+  optional uint32 Module_Type = 91;
+  optional insta360.messages.Options.SFRCalibrationInfo sfrcalibrationinfo = 92;
+  optional insta360.messages.Options.CameraPostureType camera_posture = 93;
+  optional bool Factory_Mode = 94;
+  optional insta360.messages.Options.UdiskMode udisk_mode = 95;
+  optional uint32 HW_Version = 96;
+  optional insta360.messages.Options.Bt_Wakeup_Sw bt_wakeup_sw = 97;
+  optional uint32 factory_ageing_status = 99;
+  optional bool raw_10bit_enable = 100;
+}
+
+message insta360.messages.Options.BTCarCmdInfo {   // sizeof=20
+  repeated insta360.messages.BTCarCmdID bt_msg_list = 8;
+}
+
+message insta360.messages.Options.GyroFilterConfig {   // sizeof=20
+  optional uint32 dlpf_value = 1;
+}
+
+message insta360.messages.Options.GyroInfo {   // sizeof=28
+  optional insta360.messages.Options.GyroInfo.GyroType gyro_type = 1;
+  optional insta360.messages.Options.GyroInfo.GyroPos gyro_pos = 2;
+}
+
+message insta360.messages.Options.SFRCalibrationInfo {   // sizeof=28
+  optional uint32 SFR_status = 1;
+  repeated double sfrResult = 20;
+}
+
+message insta360.messages.Options.WifiChannelList {   // sizeof=28
+  optional string country_code = 1;
+  optional bytes channel_list = 2;
+}
+
+message insta360.messages.Options.WifiInfo {   // sizeof=36
+  optional string ssid = 1;
+  optional string password = 2;
+  optional int32 channel = 3;
+  optional insta360.messages.Options.WifiInfo.Mode mode = 4;
+}
+
+message insta360.messages.Photo {   // sizeof=48
+  optional string uri = 1;
+  optional uint64 file_size = 2;
+  optional bytes s_thumbnail = 3;
+}
+
+message insta360.messages.PhotographyOptions {   // sizeof=312
+  optional uint32 channel = 1;
+  optional sint32 brightness = 2;
+  optional uint32 contrast = 3;
+  optional uint32 saturation = 4;
+  optional sint32 hue = 5;
+  optional uint32 sharpness = 6;
+  optional sint32 exposure_bias = 7;
+  optional insta360.messages.PhotographyOptions.ExposureMode exposure_mode = 8;
+  optional insta360.messages.PhotographyOptions.ExposureProg exposure_prog = 9;
+  optional insta360.messages.PhotographyOptions.ExposureManual exposure_manual = 10;
+  optional insta360.messages.PhotographyOptions.AEMeterMode meter_mode = 11;
+  repeated uint32 manual_meter_weights = 12;
+  optional insta360.messages.PhotographyOptions.WhiteBalance white_balance = 13;
+  optional insta360.messages.Flicker flicker = 14;
+  optional uint32 ev_index = 15;
+  optional insta360.messages.PhotographyOptions.ExposureParameter auto_mode_video_param = 16;
+  optional insta360.messages.PhotographyOptions.ExposureParameter auto_mode_still_param = 17;
+  optional insta360.messages.GammaMode gamma_mode = 18;
+  optional insta360.messages.PhotographyOptions.LongExposureManual long_exposure_manual = 19;
+  optional insta360.messages.PhotographyOptions.ExposureOptions still_exposure = 20;
+  optional insta360.messages.PhotographyOptions.ExposureOptions video_exposure = 21;
+  optional bool preview_mctf_enable = 22;
+  optional bool preview_sport_mode_enable = 23;
+  optional uint32 video_iso_top_limit = 24;
+  optional insta360.messages.RawCaptureType raw_capture_type = 25;
+  optional uint32 photography_self_timer = 26;
+  optional uint32 aeb_capture_num = 27;
+  optional insta360.messages.PhotographyOptions.PREVIEW_SPORT_LEVEL preview_sport_level = 28;
+  optional uint32 record_duration = 29;
+  optional uint32 photo_size_id = 30;
+  optional insta360.messages.VideoResolution record_resolution = 31;
+  optional uint32 video_bitrate = 32;
+  optional insta360.messages.FovType fov_type = 33;
+  optional bool flowstate_base_enable = 34;
+  optional insta360.messages.PhotographyOptions.COLOR_MODE color_mode = 35;
+  repeated insta360.messages.PhotographyOptions.ResRecLimit res_rec_limit = 36;
+  optional uint32 accelerate_frequency = 37;
+  optional double focal_length_value = 38;
+  optional uint32 white_balance_value = 39;
+  optional insta360.messages.PhotoSize photo_resolution = 40;
+}
+
+message insta360.messages.PhotographyOptions.ExposureManual {   // sizeof=68
+  optional insta360.messages.PhotographyOptions.ExposureManual.RelateMode relate_mode = 1;
+  optional uint32 iso = 2;
+  optional insta360.messages.PhotographyOptions.ShutterSpeed shutter_speed = 3;
+  optional uint32 video_iso = 4;
+  optional insta360.messages.PhotographyOptions.ShutterSpeed video_shutter_speed = 5;
+  optional uint32 still_iso = 6;
+  optional insta360.messages.PhotographyOptions.ShutterSpeed still_shutter_speed = 7;
+}
+
+message insta360.messages.PhotographyOptions.ExposureOptions {   // sizeof=40
+  optional insta360.messages.PhotographyOptions.ExposureOptions.Program program = 1;
+  optional uint32 iso = 2;
+  optional double shutter_speed = 3;
+}
+
+message insta360.messages.PhotographyOptions.ExposureParameter {   // sizeof=28
+  optional uint32 iso = 1;
+  optional insta360.messages.PhotographyOptions.ShutterSpeed shutter_speed = 2;
+}
+
+message insta360.messages.PhotographyOptions.ExposureProg {   // sizeof=36
+  optional insta360.messages.PhotographyOptions.ExposureProg.ProgMode mode = 1;
+  optional uint32 iso = 2;
+  optional insta360.messages.PhotographyOptions.ShutterSpeed shutter_speed = 3;
+}
+
+message insta360.messages.PhotographyOptions.LongExposureManual {   // sizeof=28
+  optional uint32 iso = 1;
+  optional uint32 shutter_speed = 2;
+}
+
+message insta360.messages.PhotographyOptions.ResRecLimit {   // sizeof=28
+  optional insta360.messages.VideoResolution video_res = 1;
+  optional uint32 limit_time = 2;
+}
+
+message insta360.messages.PlayWav {   // sizeof=16
+  optional string uri = 1;
+}
+
+message insta360.messages.PtzCtrlInfo {   // sizeof=68
+  optional insta360.messages.PtzCtrlInfo.PTZLINK_INFO ptz_link_info = 1;
+  optional uint32 touch_ic_state = 2;
+  optional insta360.messages.PtzCtrlInfo.PTZAF_CORRECT ptz_af_correct = 3;
+  optional insta360.messages.PTZLensType hall_switch_state = 4;
+  optional insta360.messages.PTZRCKeyType ptz_rc_key = 5;
+  optional string ptz_serial = 6;
+  optional insta360.messages.PtzCtrlInfo.PTZ_GIMBAL_MC ptz_gimbal_midpoint_cali = 7;
+  optional insta360.messages.PTZInterDetectType ptz_inter_detect = 8;
+  optional bool ptz_mc_self_test = 9;
+}
+
+message insta360.messages.PtzCtrlInfo.PTZAF_CORRECT {   // sizeof=28
+  optional uint32 param1 = 1;
+  optional uint32 param2 = 2;
+}
+
+message insta360.messages.PtzCtrlInfo.PTZLINK_INFO {   // sizeof=44
+  optional string PTZSFVERSION = 1;
+  optional string PTZUUID = 2;
+  optional string PTZSERIAL = 3;
+  optional bool PTZIMUINVAILD = 4;
+  optional bool PTZTOUCHIC = 5;
+  optional string PTZHWVERSION = 6;
+}
+
+message insta360.messages.PtzCtrlInfo.PTZ_GIMBAL_MC {   // sizeof=20
+  repeated double ptz_gimbal_midpoint_list = 3;
+}
+
+message insta360.messages.RecordWav {   // sizeof=16
+  optional string uri = 1;
+}
+
+message insta360.messages.Sensor {   // sizeof=36
+  repeated string serials = 1;
+  optional insta360.messages.Sensor.Type type = 2;
+  repeated string id = 3;
+}
+
+message insta360.messages.SetFileExtra {   // sizeof=36
+  optional string uri = 1;
+  optional uint32 extra_type = 2;
+  optional bytes data = 3;
+}
+
+message insta360.messages.SetFlowstateEnable {   // sizeof=20
+  optional uint32 enable = 1;
+}
+
+message insta360.messages.SetKeyTimePoint {   // sizeof=40
+  optional uint64 timestamp = 1;
+  optional insta360.messages.SetKeyTimePoint.KeyTimePointType type = 2;
+  optional string typeDetail = 3;
+}
+
+message insta360.messages.SetOptions {   // sizeof=24
+  repeated insta360.messages.OptionType option_types = 1;
+  optional insta360.messages.Options value = 2;
+}
+
+message insta360.messages.SetOptionsResp {   // sizeof=20
+  repeated insta360.messages.OptionType option_types = 1;
+}
+
+message insta360.messages.SetPhotographyOptions {   // sizeof=32
+  repeated insta360.messages.PhotographyOptionType option_types = 1;
+  optional insta360.messages.PhotographyOptions value = 2;
+  optional insta360.messages.FunctionMode function_mode = 3;
+}
+
+message insta360.messages.SetPhotographyOptionsResp {   // sizeof=20
+  repeated insta360.messages.PhotographyOptionType success_types = 1;
+}
+
+message insta360.messages.SetPtzOptions {   // sizeof=24
+  repeated insta360.messages.PTZFactoryType option_types = 1;
+  optional insta360.messages.PtzCtrlInfo value = 2;
+}
+
+message insta360.messages.SetPtzOptionsResp {   // sizeof=20
+  repeated insta360.messages.PTZFactoryType option_types = 1;
+}
+
+message insta360.messages.SetSubmodeOptions {   // sizeof=32
+  repeated insta360.messages.SubmodeOptionType option_types = 1;
+  optional insta360.messages.SubmodeOptions value = 2;
+  optional insta360.messages.FunctionMode function_mode = 3;
+}
+
+message insta360.messages.SetSubmodeOptionsResp {   // sizeof=20
+  repeated insta360.messages.SubmodeOptionType success_types = 1;
+}
+
+message insta360.messages.SetTimelapseOptions {   // sizeof=24
+  optional insta360.messages.TimelapseOptions timelapse_options = 1;
+  optional insta360.messages.TimelapseMode mode = 2;
+}
+
+message insta360.messages.StartBulletTime {   // sizeof=12
+}
+
+message insta360.messages.StartCapture {   // sizeof=20
+  optional insta360.messages.CaptureMode mode = 1;
+}
+
+message insta360.messages.StartCaptureWithParam {   // sizeof=108
+  optional bool enableAudio = 1;
+  optional bool enableVideo = 2;
+  optional insta360.messages.AACBSType audioType = 3;
+  optional uint32 audioSampleRate = 4;
+  optional uint32 audioBitrate = 5;
+  optional uint32 videoBitrate = 6;
+  optional insta360.messages.VideoResolution resolution = 7;
+  optional bool enableGyro = 8;
+  optional uint32 videoBitrate1 = 9;
+  optional insta360.messages.VideoResolution resolution1 = 10;
+  optional uint32 previewStreamNum = 11;
+  optional insta360.messages.CaptureMode mode = 12;
+}
+
+message insta360.messages.StartHdr {   // sizeof=12
+}
+
+message insta360.messages.StartLiveStream {   // sizeof=116
+  optional bool enableAudio = 1;
+  optional bool enableVideo = 2;
+  optional insta360.messages.AACBSType audioType = 3;
+  optional uint32 audioSampleRate = 4;
+  optional uint32 audioBitrate = 5;
+  optional uint32 videoBitrate = 6;
+  optional insta360.messages.VideoResolution resolution = 7;
+  optional bool enableGyro = 8;
+  optional uint32 videoBitrate1 = 9;
+  optional insta360.messages.VideoResolution resolution1 = 10;
+  optional uint32 previewStreamNum = 11;
+  optional bool enableRotate = 12;
+  optional bool isForLive = 13;
+}
+
+message insta360.messages.StartLoopRecording {   // sizeof=12
+}
+
+message insta360.messages.StartTimeShift {   // sizeof=12
+}
+
+message insta360.messages.StartTimelapse {   // sizeof=24
+  optional insta360.messages.TimelapseMode mode = 1;
+  optional insta360.messages.ExtraMetadata extra_metadata = 2;
+}
+
+message insta360.messages.StopBulletTime {   // sizeof=16
+  optional insta360.messages.ExtraMetadata extra_metadata = 1;
+}
+
+message insta360.messages.StopBulletTimeResp {   // sizeof=16
+  optional insta360.messages.Video video = 1;
+}
+
+message insta360.messages.StopCapture {   // sizeof=24
+  optional insta360.messages.ExtraMetadata extra_metadata = 1;
+  optional insta360.messages.CaptureMode mode = 2;
+}
+
+message insta360.messages.StopCaptureResp {   // sizeof=16
+  optional insta360.messages.Video video = 1;
+}
+
+message insta360.messages.StopHdr {   // sizeof=16
+  optional insta360.messages.ExtraMetadata extra_metadata = 1;
+}
+
+message insta360.messages.StopHdrResp {   // sizeof=16
+  optional insta360.messages.Video video = 1;
+}
+
+message insta360.messages.StopLoopRecording {   // sizeof=16
+  optional insta360.messages.ExtraMetadata extra_metadata = 1;
+}
+
+message insta360.messages.StopLoopRecordingResp {   // sizeof=16
+  optional insta360.messages.Video video = 1;
+}
+
+message insta360.messages.StopTimelapse {   // sizeof=24
+  optional insta360.messages.TimelapseMode mode = 1;
+  optional insta360.messages.ExtraMetadata extra_metadata = 2;
+}
+
+message insta360.messages.StopTimelapseResp {   // sizeof=16
+  optional insta360.messages.Video video = 1;
+}
+
+message insta360.messages.StorageState {   // sizeof=56
+  optional insta360.messages.CardState card_state = 1;
+  optional uint64 free_space = 2;
+  optional uint64 total_space = 3;
+  optional insta360.messages.CardLocation location = 4;
+}
+
+message insta360.messages.SubmodeOptions {   // sizeof=20
+  optional uint32 self_timer = 1;
+}
+
+message insta360.messages.TakePicture {   // sizeof=56
+  optional insta360.messages.TakePicture.Mode mode = 1;
+  optional insta360.messages.ExtraMetadata extra_metadata = 2;
+  repeated sint32 aeb_ev_bias = 3;
+  optional insta360.messages.RawCaptureType raw_capture_type = 4;
+  optional bool isInstaPanoEnabled = 5;
+  optional insta360.messages.SensorDevice focusSensor = 6;
+}
+
+message insta360.messages.TakePictureResponse {   // sizeof=32
+  optional insta360.messages.Photo image = 1;
+  repeated insta360.messages.Photo aeb_images = 2;
+  repeated insta360.messages.Photo burst_images = 3;
+}
+
+message insta360.messages.TempState {   // sizeof=28
+  optional insta360.messages.TemperatureState temp_state = 1;
+  optional int32 temp_value = 2;
+}
+
+message insta360.messages.TimelapseOptions {   // sizeof=44
+  optional uint32 duration = 1;
+  optional uint32 lapseTime = 2;
+  optional insta360.messages.TimelapseOptions.OutputType output_type = 3;
+  optional uint32 accelerate_fequency = 4;
+}
+
+message insta360.messages.UploadGps {   // sizeof=24
+  optional bytes gps = 1;
+}
+
+message insta360.messages.Video {   // sizeof=40
+  optional string uri = 1;
+  optional uint64 file_size = 2;
+  optional uint32 total_time = 3;
+}
