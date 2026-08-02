@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Recover the UVC extension-unit map from the Insta360 Link RTOS image.
 
-    ./extract_partitions.py Insta360WebCamFW.bin out/
+    ./fwpack.py unpack Insta360WebCamFW.bin out/
     ./xu_static_map.py out/p0_rtos.bin
 
 Reads the dispatch table of {unitID, selector, handler} triples that the XU request
