@@ -28,7 +28,7 @@ any program that opens `/dev/videoN` can send:
 The vendor-class path is the complete one. It uploads the firmware and reboots the
 camera with no physical contact.
 
-This is analysis of a device I own. See [Scope](#12-scope).
+This is analysis of a device I own. See [Scope](#13-scope).
 
 ---
 
@@ -119,6 +119,10 @@ The package holds ten integrity values in total: three `flpart_t` CRC32 values, 
 MD5 digest. All ten verify on the vendor image.
 [`fwpack.py`](fwpack.py) recomputes all ten. Its `roundtrip` command rebuilds the
 vendor file byte for byte.
+
+This container is not new. I derived it from the image, but the same format is
+already public for the Insta360 GO and X3 lines, which use the same Ambarella
+lineage. See §12.1.
 
 Partition 0 is one flat image based at `0x20000`. String references use MOVW/MOVT
 pairs instead of literal pools. The sensor is an IMX577, which matches the
@@ -416,6 +420,11 @@ with the sensor live.
 The camera also has a `enter ptz privacy mode` function, which parks the gimbal. That
 is the privacy method the vendor ships, and it is visible rather than silent.
 
+Indicator suppression is an established class of result on other hardware (§12.3). The
+difference here is cost. Earlier work on this class had to reverse a boot ROM and
+build a way to reflash a microcontroller. This camera needed neither, because the
+update path of the vendor accepts a modified image.
+
 ---
 
 ## 7. USB control protocol
@@ -460,6 +469,10 @@ Camera Terminal 1, handler `0x5894D4`:
 | 15 | `CT_ROLL_ABSOLUTE` | 0x20, roll field |
 
 ### 7.3 Extension-unit dispatch
+
+Existing Linux projects for this camera already use XU unit 9 and three of its
+selectors, found by USB capture (§12.2). The table below comes from the dispatch table
+in the image instead, and covers all 34 registered selectors.
 
 A table of 38 `{unitID, selector, handler}` triples at `0x011683E0` routes the
 requests. The dispatcher is `FUN_00589A28`. `bRequest` values are `0x01` SET_CUR,
@@ -756,7 +769,71 @@ each mode, so a rule must list all three.
 
 ---
 
-## 12. Scope
+## 12. Prior work
+
+### 12.1 Package format
+
+The container in §2 is already public for other Insta360 cameras. I derived it from
+the image before I found this work, so §2 is an independent rediscovery and not a new
+result.
+
+- [enekochan/insta360-go-firmware-tool](https://github.com/enekochan/insta360-go-firmware-tool)
+  documents the format for the GO 2, GO 3 and GO 3S, which use the same Ambarella H22
+  SoC. Its firmware-structure document gives:
+    - the 560-byte header and the magic at `0x20`
+    - the CRC32 at `0x24`
+    - the section table at `0x30`, as a length and an **inverted running CRC32**
+    - the 256-byte section headers with magic `0x90EB24A3`
+    - the MD5 over all preceding data
+    - the footer entries of size, name, version and MD5
+
+  The tool repacks firmware that those cameras accept. That document prints the magic
+  values in the opposite byte order to this one.
+- [nneonneo/Insta360-X3-Firmware-Tools](https://github.com/nneonneo/Insta360-X3-Firmware-Tools)
+  unpacks and repacks Insta360 X3 firmware and notes that the format resembles other
+  Ambarella devices and the GO structure.
+
+Neither project mentions the Link. Neither documents a signature check, which agrees
+with §3.
+
+### 12.2 Control protocol
+
+- [dtinth](https://dt.in.th/Insta360LinkControllerWebSocketProtocol) reverse
+  engineered the WebSocket protocol of the Link Controller desktop application. That
+  work is at the application layer and does not cover USB.
+- [vrwallace/Insta360-Link-1-and-2-Controller-for-Linux](https://github.com/vrwallace/Insta360-Link-1-and-2-Controller-for-Linux)
+  and [EdenCoder/insta360-linux](https://github.com/EdenCoder/insta360-linux) control
+  the camera from Linux. Both use XU unit 9, which agrees with §7.1. Both use
+  selectors 2, 19 and 14, found from the work of dtinth plus USB capture and
+  experiment.
+
+Neither project covers firmware, USB mode switching, mass storage, the vendor class,
+or the indicator LED.
+
+### 12.3 Indicator suppression on other hardware
+
+- [iSeeYou: Disabling the MacBook Webcam Indicator LED](https://www.usenix.org/conference/usenixsecurity14/technical-sessions/presentation/brocker),
+  Brocker and Checkoway, USENIX Security 2014. Reprograms the iSight microcontroller.
+- [Lights Out](https://github.com/xairy/lights-out), Konovalov, POC 2024. Turns off
+  the webcam indicator of the ThinkPad X230. The LED is on GPIO B1 of a Ricoh R5U8710
+  at XDATA address `0x80`. That work had to leak and reverse the boot ROM of the
+  controller and build a way to reflash an 8051 over USB.
+
+### 12.4 What this document adds
+
+I found no published firmware analysis of the Link, and no CVE for it. The parts that
+appear to be new are:
+
+- the `simple` vendor class of the Link: `4255:1234`, control selectors 1, 2, 4, 5
+  and 6, the `wValue = CS` form, and control selector 2 as a reboot primitive (§5)
+- the unattended install that follows from it, on any Insta360 camera (§5.3)
+- the LED path of the Link: the table at `0x01192070` and UART command `0x50` to the
+  gimbal MCU (§6)
+- the full extension-unit map and the internal parameter space (§7.3, §7.4)
+- the mode guard and the inert version compare (§3.2, §3.5)
+- the hardware result that `amboot` does not verify partition 0 on this camera (§5.4)
+
+## 13. Scope
 
 This is interoperability and security analysis of a device I own. This directory
 holds no vendor code. `insta360.proto` is a schema rebuilt from descriptor metadata,
